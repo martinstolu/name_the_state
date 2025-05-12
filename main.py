@@ -7,13 +7,13 @@ screen.title("U.S. States game")
 image = "blank_states_img.gif"
 screen.addshape(image)
 turtle.shape(image)
-# TODO 1. Convert the guess to title case
+
 score = 50
 correct_answer = 0
 
 FONT = ("Courier", 8, "bold")
 data = pandas.read_csv("50_states.csv")
-all_state = data.state
+all_state = data.state.to_list
 all_guessed_state = []
 
 writer = turtle.Turtle("circle")
@@ -41,10 +41,11 @@ while game_on:
         correct_answer+=1
         all_guessed_state.append(answer_state)
         state_data = data[data.state == answer_state]
-        x_cor = int(state_data.x)
-        y_cor = int(state_data.y)
+        x_cor = state_data.x.item()
+        y_cor = state_data.y.item()
         writer.goto(x= x_cor, y= y_cor)
-        writer.write(arg= answer_state, align= "center", font= FONT)
+        writer.write(arg= answer_state,
+                     align= "center", font= FONT)
 
 missing_states = [state for state
                       in all_state if state not in
@@ -61,21 +62,10 @@ for state in missing_states:
 # Game over message
 writer.goto(0, 0)
 if len(all_guessed_state) == 50:
-    writer.write("Game Over!\nYou guessed all 50 states!", align="center", font=("Courier", 18, "bold"))
+    writer.write("Game Over!\nYou guessed all 50 states!",
+                 align="center", font=("Courier", 18, "bold"))
 else:
-    writer.write("Game Over!\nBetter luck next time.", align="center", font=("Courier", 18, "bold"))
-
-screen.exitonclick()
-
-
-
-
-
-# TODO 2. check if the guess is among the 50 states
-# TODO 3. Write correct guesses onto the map
-# TODO 4. Record the correct guesses in a list
-# TODO 5. Keep track of the score
-
-
+    writer.write("Game Over!\nBetter luck next time.",
+                 align="center", font=("Courier", 18, "bold"))
 
 screen.exitonclick()
